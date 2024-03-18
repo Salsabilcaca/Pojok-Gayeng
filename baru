@@ -1,3 +1,139 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>SpyIptv</title>
+        <script defer="defer" src="runtimechunk~popup.js"></script>
+        <script defer="defer" src="vendors.js"></script>
+        <script defer="defer" src="popup.js"></script>
+    </head>
+    <body>
+	
+	<a href="https://none.com">none</a>
+  
+    <img src="https://none.com"
+	
+        <div id="app"></div>
+    </body>
+
+</head>
+ 
+<noscript>
+
+
+
+{
+  "files": ["streams/*.m3u"],
+  "rules": {
+    "no-empty-lines": true,
+    "require-header": true,
+    "attribute-quotes": true,
+    "require-info": true,
+    "require-title": true,
+    "no-trailing-spaces": false,
+    "no-whitespace-before-title": true,
+    "no-multi-spaces": true,
+    "no-extra-comma": true,
+    "space-before-paren": true,
+    "no-dash": true
+  }
+}
+!/usr/bin/env python3
+
+from urllib.parse import urlparse;
+from base64 import b64decode, b64encode;
+import binascii;
+import requests;
+import json;
+import re;
+import os;
+import argparse;
+
+parser=argparse.ArgumentParser();
+parser.add_argument('target',help='url/json/file',nargs='?');
+urls=parser.add_argument_group('Get CK from URL');
+urls.add_argument('-a','--user-agent',help='user-agent');
+urls.add_argument('-r','--referer',help='url-referer');
+urls.add_argument('-m','--request-method',help='method');
+
+args=parser.parse_args();
+ch=requests.Session();
+
+def base64_encode(string):
+return b64encode(string).decode();
+
+def base64_decode(base64):
+[eq,loop]=['',0];
+while True:
+  try:
+   result=b64decode(base64+eq);
+   break;
+  except binascii.Error:
+   eq+='=';loop+=1;
+   if loop>=10:
+    return False;
+return result;
+
+def is_json(jsons):
+try:
+  json.loads(jsons);
+  return True;
+except json.decoder.JSONDecodeError:
+  return False;
+
+def is_url(url):
+try:
+  result=urlparse(url);
+  return all([result.scheme,result.netloc]);
+except ValueError:
+  return False;
+
+if not args.target:
+raise Exception('No source inserted');
+elif is_json(args.target):
+source='JSON:\t\t%s'%args.target;
+ck=args.target;
+elif os.path.isfile(args.target):
+source='File:\t\t%s'%args.target;
+ck=open(args.target).read();
+else:
+headers={};
+source='URL:\t\t%s\nUser-Agent:\t%s\nReferer:\t%s'%(args.target,args.user_agent,args.referer);
+if not is_url(args.target):
+  raise Exception('Invalid URL');
+if args.user_agent:
+  headers['User-Agent']=args.user_agent;
+if args.referer:
+  headers['Referer']=args.Referer;
+ch.headers.update(headers);
+if args.request_method=='GET' or not args.request_method:
+  ck=ch.get(args.target).content.decode();
+elif args.request_method=='POST':
+  ck=ch.post(args.target).content.decode();
+else:
+  raise Exception('Request method not allowed');
+
+ck=ck.replace('_', '/').replace('-', '+');
+
+try:
+ck=json.loads(ck);
+except:
+regex=re.compile(r'\s+(?P<data>{.*})',re.S);
+ck=json.loads(''.join(regex.findall(ck)));
+
+print('%s\nResult:'%source,end='');
+for keys in ck['keys']:
+print('\t\t%s:%s'%(
+  base64_decode(keys['kid']).hex(),
+  base64_decode(keys['k']).hex()
+));
+
+ch.close();
+
+
+
+
 #EXTM3U billed-msg="therium` PLAYLIST GRATIS 🖖", url-tvg="https://www.bevy.be/generate/9lxaRala0v.xml,https://i.mjh.nz/SamsungTVPlus/all.xml,https://i.mjh.nz/au/all/epg.xml,https://www.tdtchannels.com/epg/TV.xml,https://www.bevy.be/bevyfiles/indonesiapremium1.xml,https://www.bevy.be/bevyfiles/indonesiapremium2.xml,https://www.bevy.be/bevyfiles/indonesiapremium3.xml,https://www.bevy.be/bevyfiles/indonesiapremium4.xml,https://www.bevy.be/bevyfiles/indiapremium4.xml,https://www.bevy.be/bevyfiles/malaysia.xml,https://www.bevy.be/bevyfiles/malaysiapremium1.xml,https://www.bevy.be/bevyfiles/malaysiapremium2.xml,https://www.bevy.be/bevyfiles/singaporepremium.xml,https://www.bevy.be/bevyfiles/thailand.xml,https://www.bevy.be/bevyfiles/thailandpremium.xml,https://www.bevy.be/bevyfiles/unitedstatespremium3.xml,https://www.bevy.be/bevyfiles/unitedstatespremium4.xml,https://i.mjh.nz/PlutoTV/all.xml,https://www.bevy.be/bevyfiles/francepremium.xml,https://www.bevy.be/bevyfiles/slovakia.xml,https://www.bevy.be/bevyfiles/slovakiapremium.xml" refresh="23"
 
 
@@ -486,10 +622,22 @@
 
 
 
+------------------------------ PLAYLIST GRATIS--------------------------
+------------------- JANGAN DIJUAL,HANYA UNTUK PEMAKAIAN PRIBADI SAJA ------------------
 
+#EXTM3U
 
+#EXTINF:-1 tvg-logo="https://cdn1.postimg.pro/file/babepics/2023/10/10/PmQ62.png" group-title="INFORMASI",0.Ghaitsa_Net
+https://archive.org/download/MurotalMR/001.mp3
 
+#EXTINF:-1 tvg-name="6"  tvg-logo="https://cdn1.postimg.pro/file/babepics/2023/10/25/hrcZf.png" group-title="INFORMASI",1d#-S(GRATIS SEBAGAI MEDIA BELAJAR PEMUDA POJOK)
+https://lightning-now70s-samsungnz.amagi.tv/playlist.m3u8
 
+#EXTINF:-1 tvg-name="6"  tvg-logo="https://cdn1.postimg.pro/file/babepics/2023/10/25/hrcZf.png" group-title="INFORMASI",1d#-S(BUKAN UNTUK DIPERJUAL BELIKAN)
+https://lightning-now80s-samsunguk.amagi.tv/playlist.m3u8
+
+#EXTINF:-1 tvg-name="6"  tvg-logo="https://cdn1.postimg.pro/file/babepics/2023/10/25/hrcZf.png" group-title="INFORMASI",2_Pojok Gayeng
+https://lightning-now90s-samsungnz.amagi.tv/playlist.m3u8
 
 ===================================================```````` NASIONAL ````````===========================================================
 
